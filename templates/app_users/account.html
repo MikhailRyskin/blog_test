@@ -6,8 +6,13 @@
 </head>
 <body>
 <div>Привет, пользователь {{ request.user.username }}</div>
+<br>
 <a href="{% url 'blog' pk=blog.pk %}">перейти к записям блога</a>
-<div>ссылка на ленту</div>
+<br>
+<br>
+<a href="{% url 'feed_list' pk=request.user.pk %}">перейти к ленте пользователя</a>
+<br>
+<br>
 <div>Создать новый пост</div>
 <form method="post">
     {% csrf_token %}

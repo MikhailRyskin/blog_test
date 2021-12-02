@@ -17,6 +17,12 @@
 {% else %}
     <p>Постов нет.</p>
 {% endif %}
+<br>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">подписаться на этот блог</button>
+</form>
+<br>
 <a href="{% url 'blog_list' %}">вернуться к списку блогов</a>
 </body>
 </html>

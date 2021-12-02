@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Лента</title>
+</head>
+<body>
+<h2>Вся лента пользователь: {{ request.user.username }}</h2>
+{% if feed_posts %}
+{% for post in feed_posts %}
+<ul></ul>
+  <li>
+    <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }} из блога: {{ post.blog.name }}</a>
+  </li>
+</ul>
+{% endfor %}
+{% else %}
+    <p>В ленте ничего нет.</p>
+{% endif %}
+<br>
+<a href="{% url 'blog_list' %}">вернуться к списку блогов</a>
+</body>
+</html>

@@ -7,6 +7,12 @@
 <body>
 <h3>{{ post.title }}</h3>
 <p>{{ post.content }}</p>
+<br>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">отметить пост как прочитанный</button>
+</form>
+<br>
 <a href="{% url 'blog' pk=post.blog.pk %}">вернуться к записям блога</a>
 </body>
 </html>
