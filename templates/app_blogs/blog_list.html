@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Все блоги</title>
+</head>
+<body>
+<h2>Все блоги</h2>
+{% if blogs %}
+{% for blog in blogs %}
+<ul></ul>
+  <li>
+    <a href="{% url 'blog' pk=blog.pk %}">{{ blog.name }} автор: {{ blog.user.username }}</a>
+  </li>
+</ul>
+{% endfor %}
+{% else %}
+    <p>Блогов нет.</p>
+{% endif %}
+
+</body>
+</html>

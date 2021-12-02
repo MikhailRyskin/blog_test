@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Блог {{ blog.name }}</title>
+</head>
+<body>
+<h2>Блог: {{ blog.name }} автор: {{ blog.user.username }}</h2>
+{% if posts %}
+{% for post in posts %}
+<ul>
+  <li>
+     <a href="{% url 'post_detail' pk=post.pk %}">{{ post.title }}</a>
+  </li>
+</ul>
+{% endfor %}
+{% else %}
+    <p>Постов нет.</p>
+{% endif %}
+<a href="{% url 'blog_list' %}">вернуться к списку блогов</a>
+</body>
+</html>
