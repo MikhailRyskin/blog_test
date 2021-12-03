@@ -5,7 +5,8 @@
     <title>Лента</title>
 </head>
 <body>
-<h2>Вся лента пользователь: {{ request.user.username }}</h2>
+<div>Привет, пользователь {{ request.user.username }}</div>
+<h4>Лента постов (новые сверху)</h4>
 {% if feed_posts %}
 {% for post in feed_posts %}
 <ul></ul>

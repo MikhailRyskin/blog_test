@@ -5,10 +5,11 @@
     <title>Все блоги</title>
 </head>
 <body>
+<div>Привет, пользователь {{ request.user.username }}</div>
 <h2>Все блоги</h2>
 {% if blogs %}
 {% for blog in blogs %}
-<ul></ul>
+<ul>
   <li>
     <a href="{% url 'blog' pk=blog.pk %}">{{ blog.name }} автор: {{ blog.user.username }}</a>
   </li>
@@ -17,6 +18,6 @@
 {% else %}
     <p>Блогов нет.</p>
 {% endif %}
-
+<a href="{% url 'main' %}">вернуться на главную страницу</a>
 </body>
 </html>

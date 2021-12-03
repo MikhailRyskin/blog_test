@@ -1,5 +1,8 @@
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.mail import send_mail
+from django.urls import reverse
+from blog_test.settings import DEFAULT_FROM_EMAIL
 
 
 class Blog(models.Model):
@@ -29,21 +32,29 @@ class Post(models.Model):
     def __str__(self):
         return f'{self.title}'
 
+    def get_absolute_url(self):
+        return reverse('post_detail', args=[str(self.id)])
+
+    def save(self, *args, **kwargs):
+        super().save(*args, **kwargs)
+        blog_subscribers = Subscription.objects.filter(blog=self.blog)
+        subscribers_email = []
+        for subscriber in blog_subscribers:
+            subscribers_email.append(subscriber.user.email)
+        # нужно получить host
+        ref = 'http://127.0.0.1:8000' + self.get_absolute_url()
+        subject = 'added new post'
+        message = f'В блоге "{self.blog.name}", на который вы подписаны, появился новый пост "{self.title}"\n {ref}'
+        send_mail(subject, message, DEFAULT_FROM_EMAIL, subscribers_email, fail_silently=False)
+
 
 class Subscription(models.Model):
-    """Модель подписки на блог"""
+    """Модель подписки пользователя на блог"""
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     blog = models.ForeignKey(Blog, on_delete=models.SET_NULL, null=True)
 
 
-# class Feed(models.Model):
-#     """Модель ленты новостей (постов)"""
-#     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
-#     post = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)
-#     is_read = models.BooleanField(default=False)
-
-
 class Read(models.Model):
-    """Модель постов, прочитанных пользователем)"""
+    """Модель поста, прочитанного пользователем)"""
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     post = models.ForeignKey(Post, on_delete=models.SET_NULL, null=True)

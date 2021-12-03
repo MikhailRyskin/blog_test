@@ -9,10 +9,9 @@ class AccountView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
     template_name = 'app_users/account.html'
     model = Post
     fields = ['title', 'content']
-    success_url = '/blogs/'
 
     def test_func(self):
-        return self.request.user.id == int(self.kwargs['pk'])
+        return self.request.user.pk == int(self.kwargs['pk'])
 
     def form_valid(self, form):
         form.instance.blog = Blog.objects.get(user=self.request.user)
@@ -20,7 +19,7 @@ class AccountView(LoginRequiredMixin, UserPassesTestMixin, CreateView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        user = User.objects.get(id=self.request.user.id)
+        user = User.objects.get(pk=self.request.user.pk)
         context["blog"] = user.blog
         return context
 

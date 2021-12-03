@@ -5,6 +5,7 @@
     <title>Блог {{ blog.name }}</title>
 </head>
 <body>
+<div>Привет, пользователь {{ request.user.username }}</div>
 <h2>Блог: {{ blog.name }} автор: {{ blog.user.username }}</h2>
 {% if posts %}
 {% for post in posts %}
@@ -18,10 +19,17 @@
     <p>Постов нет.</p>
 {% endif %}
 <br>
+{% if in_subscription %}
+<form method="post">
+    {% csrf_token %}
+    <button type="submit">отписаться от этого блога</button>
+</form>
+{% else %}
 <form method="post">
     {% csrf_token %}
     <button type="submit">подписаться на этот блог</button>
 </form>
+{% endif %}
 <br>
 <a href="{% url 'blog_list' %}">вернуться к списку блогов</a>
 </body>
