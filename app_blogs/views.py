@@ -57,14 +57,19 @@ class FeedListView(ListView):
     template_name = "app_blogs/feed_list.html"
 
     def get_queryset(self):
-        queryset = super().get_queryset()
-        in_subscriptions = Subscription.objects.filter(user=self.kwargs["pk"])
-        blogs_in_sub = []
-        for sub in in_subscriptions:
-            blogs_in_sub.append(sub.blog_id)
-        in_read = Read.objects.filter(user=self.kwargs["pk"])
-        read_posts = []
-        for item in in_read:
-            read_posts.append(item.post_id)
-        queryset = queryset.filter(blog_id__in=blogs_in_sub).exclude(id__in=read_posts).order_by('-created_at')
+        # через values_list
+        # blogs_in_sub = Subscription.objects.filter(user=self.kwargs["pk"]).values_list('blog', flat=True)
+        # read_posts = Read.objects.filter(user=self.kwargs["pk"]).values_list('post', flat=True)
+        # queryset = Post.objects.filter(blog_id__in=blogs_in_sub).exclude(id__in=read_posts).order_by('-created_at')
+
+        # через Subquery
+        # blogs_in_sub = Subscription.objects.filter(user=self.kwargs["pk"])
+        # read_posts = Read.objects.filter(user=self.kwargs["pk"])
+        # queryset = Post.objects.filter(blog_id__in=Subquery(blogs_in_sub.values_list('blog', flat=True)
+        #                                                     )).exclude(
+        #     id__in=Subquery(read_posts.values_list('post', flat=True)
+        #                     )).order_by('-created_at')
+
+        queryset = Post.objects.filter(blog__subscription__user_id=self.kwargs["pk"]
+                                       ).exclude(read__user_id=self.kwargs["pk"]).order_by('-created_at')
         return queryset

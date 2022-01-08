@@ -15,7 +15,7 @@ class Blog(models.Model):
         verbose_name_plural = 'блоги'
 
     def __str__(self):
-        return f'{self.name}'
+        return self.name
 
 
 class Post(models.Model):
@@ -30,17 +30,14 @@ class Post(models.Model):
         verbose_name_plural = 'посты'
 
     def __str__(self):
-        return f'{self.title}'
+        return self.title
 
     def get_absolute_url(self):
         return reverse('post_detail', args=[str(self.id)])
 
     def save(self, *args, **kwargs):
         super().save(*args, **kwargs)
-        blog_subscribers = Subscription.objects.filter(blog=self.blog)
-        subscribers_email = []
-        for subscriber in blog_subscribers:
-            subscribers_email.append(subscriber.user.email)
+        subscribers_email = Subscription.objects.filter(blog=self.blog).values_list('user__email', flat=True)
         # нужно получить host
         ref = 'http://127.0.0.1:8000' + self.get_absolute_url()
         subject = 'added new post'
